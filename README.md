@@ -17,4 +17,3 @@
     <li>More feature is Coming soon ...</li>
 </ul></p>
 
-<span><h3 style="color: green">J</h3><h3 style="color: yellow">D</h3></h3><h3 style="color: blue">A</h3></span>
