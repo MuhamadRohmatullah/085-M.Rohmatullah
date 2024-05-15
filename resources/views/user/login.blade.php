@@ -7,20 +7,23 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-      <div class="mb-3">
-        <label for="exampleFormControlInput1" class="form-label">Email </label>
-        <input type="email" class="form-control" id="exampleFormControlInput1" placeholder="name@example.com">
-      </div>
-      <div class="mb-3">
-      <div class="mb-3">
-      <label for="inputPassword5" class="form-label">Password</label>
-      <input type="password" id="inputPassword5" class="form-control" aria-describedby="passwordHelpBlock">  
-      </div>
-      </div>
+        <div class="mb-3">
+          <label for="exampleFormControlInput1" class="form-label">Email </label>
+          <input type="email" name="email" class="form-control" id="exampleFormControlInput1" placeholder="name@example.com">
+        </div>
+        <div class="mb-3">
+          <label for="inputPassword5" class="form-label">Password</label>
+          <input type="password" id="inputPassword5" class="form-control" aria-describedby="passwordHelpBlock">  
+        </div>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary"><a href="/register" style="text-decoration : none;">Register</a></button>
-        <button type="button" class="btn btn-primary">Login</button>
+        <button type="button" class="btn btn-secondary"><a href="/register" style="text-decoration : none; color: white">Register</a></button>
+        <button type="button" class="btn btn-primary">
+          <a href="/home" style="text-decoration : none; color: white">Login</a>
+        </button>
+        <button type="button" class="btn btn-warning">
+          <a href="/admin" style="text-decoration : none; color: white">Admin</a>
+        </button>
       </div>
     </div>
   </div>
