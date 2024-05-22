@@ -1,5 +1,5 @@
 *{
-    font-family: "Bebas Neue", sans-serif;
+    font-family: "Port Lligat Sans", sans-serif;
 }
 
 #mypost:hover, #home:hover{
@@ -8,5 +8,25 @@
 
 #mypost:focus, #home:focus{
     color: white;
+}   
+
+.padding-0{
+    padding-right:0;
+    padding-left:0;
 }
 
+#home, #mypost{
+    color: rgb(8, 252, 138)
+}
+
+.bg-sg{
+    background-color: rgb(8, 252, 138);
+}
+
+.bg-sg:hover{
+    background-color: rgba(9, 211, 117, 0.705);
+}
+
+.nav-link:hover{
+    background-color: rgb(8, 252, 138);
+}
