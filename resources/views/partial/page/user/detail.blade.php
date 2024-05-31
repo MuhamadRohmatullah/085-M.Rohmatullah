@@ -1,16 +1,10 @@
-@extends("partial.layouts.app")
-
-@section("title", "detail")
-
-@section("content")
-
+<div class="card" style="width : cover">
 <div  class="row justify-content-center">
     <img src="{{asset($watch["image"])}}" alt="gambar" style="width : 400px">
 </div>
 
+<div class="container">
 <h3>{{ $watch["name"] }}</h3>
-
-{{-- <img src="{{asset($location["photo"])}}" alt="gambar" style="width : 100px"> --}}
 
 <div class="row">
     <div class="col">
@@ -20,7 +14,7 @@
 
 <div class="row">
     <div class="col">
-        {{ $location["name"] }}
+        <img src="{{ asset('assets/images/location.png') }}" alt="" style="width : 30px"><a href="{{ $location["location_link"] }}">{{ $location["name"] }}</a>
     </div>
     <div class="col">
         {{ $location["addres"] }}
@@ -29,7 +23,7 @@
 
 <div class="row">
     <div class="col">
-        {{ $watch["seat"] }}
+        <img src="{{ asset('assets/images/seat.png') }}" alt="" style="width : 30px"> {{ $watch["seat"] }}
     </div>
     <div class="col">
         {{ $watch["time_open"] }}
@@ -38,7 +32,7 @@
 
 <div class="row">
     <div class="col">
-        {{ $status["free_paid"] }}
+        <x-price price="{{$status["free_paid"]}}"/>
     </div>
     <div class="col">
         {{ $status["price"] }}
@@ -53,7 +47,7 @@
 
 <div class="row">
     <div class="col">
-        {{ $location["location_link"] }}
+        
     </div>
     <div class="col">
         {{ $game['date'] }}
@@ -68,5 +62,5 @@
         {{ $game['competition'] }}
     </div>
 </div>
-
-@endsection
+</div>
+</div>

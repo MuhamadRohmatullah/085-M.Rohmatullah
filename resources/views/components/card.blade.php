@@ -15,7 +15,7 @@
     
     <div class="row justify-content-center mx-1 mt-2">
         <div class="z-3 position-absolute top-20 start-10 mt-2 ms-4"><x-price price="{{$status}}"/></div>
-        <div class="z-3 position-absolute top-20 start-50 mt-2 ms-5"><button class="btn btn-warning ms-5"><img src="{{ asset('assets/images/seat.png') }}" alt="" style="width : 20px">{{$seat}}</button></div>
+        <div class="z-3 position-absolute top-20 start-50 mt-2 ms-5"><button class="btn btn-light ms-5" id="seat"><img src="{{ asset('assets/images/seat.png') }}" alt="" style="width : 20px">{{$seat}}</button></div>
         <img src="{{ asset($image) }}" alt="" style=" height : 200px; border-radius: 5%;">
         <div class="z-3 position-absolute bottom-50 start-0 mb-4 ms-3"><x-price price="{{$price}}"/></div>
     </div>
