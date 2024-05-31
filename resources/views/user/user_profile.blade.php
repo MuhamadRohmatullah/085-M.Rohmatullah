@@ -34,7 +34,7 @@
             </div>
             <div class="col-xl-9 col-lg-9 col-md-12 col-sm-12 col-12 px-0 ps-1">
                 <div class="card h-100">
-                <form method="POST" action="{{ route('user.update', [ 'user' => $user['id']]) }}">
+                <form method="POST" action="{{ route('update', [ 'id' => $user['id']]) }}">
                     @csrf
                     @method("PUT")
                     <div class="card-body">
@@ -77,24 +77,7 @@
                                     <input type="name" class="form-control" id="Street" placeholder="Enter Street" value="{{ $user['addres'] }}">
                                 </div>
                             </div>
-                            {{-- <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
-                                <div class="form-group">
-                                    <label for="ciTy">City</label>
-                                    <input type="name" class="form-control" id="ciTy" placeholder="Enter City">
-                                </div>
-                            </div>
-                            <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
-                                <div class="form-group">
-                                    <label for="sTate">State</label>
-                                    <input type="text" class="form-control" id="sTate" placeholder="Enter State">
-                                </div>
-                            </div>
-                            <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
-                                <div class="form-group">
-                                    <label for="zIp">Zip Code</label>
-                                    <input type="text" class="form-control" id="zIp" placeholder="Zip Code">
-                                </div>
-                            </div> --}}
+                           
                         </div>
                         <div class="row gutters">
                             <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">

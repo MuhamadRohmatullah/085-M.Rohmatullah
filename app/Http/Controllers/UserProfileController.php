@@ -3,116 +3,43 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\User;
 
 class UserProfileController extends Controller
 {
     public function profile(){
-        $users = [
-            [
-                "id" => 1,
-                "name" => "Beckam putra",
-                "email" => "beckam@persib.co.id",
-                "date" => "22-12-2001",
-                "role" => "user",
-                "gender" => "Male",
-                "phone" => "08389272625",
-                "password" => "jhhs656"
-            ],
-            [
-                "id" => 2,
-                "name" => "Febri haryadi",
-                "email" => "febri@persib.co.id",
-                "date" => "02-12-1998",
-                "role" => "user",
-                "gender" => "Male",
-                "phone" => "08389585",
-                "password" => "tghh56"
-            ]
+       
+        $user = User::find(auth()->id());
 
-        ];
-
-        $result = [];
-
-        foreach($users as $user){
-            if($user["id"] == 1){
-                $result = $user;
-            }
-        }
-
-        return view('user.myprofile', [
-            'user' => $result
+        return view('user.profile', [
+            'user' => $user
         ]);
 
     }
 
     public function updateProfile(Request $request, $id){
-        $users = [
-            [
-                "id" => 1,
-                "name" => "Beckam putra",
-                "email" => "beckam@persib.co.id",
-                "date" => "22-12-2001",
-                "role" => "user",
-                "gender" => "Male",
-                "phone" => "08389272625",
-                "password" => "jhhs656"
-            ],
-            [
-                "id" => 2,
-                "name" => "Febri haryadi",
-                "email" => "febri@persib.co.id",
-                "date" => "02-12-1998",
-                "role" => "user",
-                "gender" => "Male",
-                "phone" => "08389585",
-                "password" => "tghh56"
-            ]
-
-        ];
-
-        foreach($users as $key => $user){
-            if($user["id"] == $id){
-                $users[$key]["name"] =  request()->post('name');
-                $users[$key]["email"] =  request()->post('email');
-                $users[$key]["phone"] =  request()->post('phone');
-                $users[$key]["password"] =  request()->post('password');
-            }
+        $user = User::find($id);
+        if (!$user) { // !false == true
+            return "User tidak ditemukan";
         }
 
-        return $users;
+        $payload = $request->only(['name', 'email', 'birth_date', 'gender', 'phone_number', 'addres', 'password']);
+
+        $user->update($payload);
+
+       return redirect()->route('profile');
+    
     }
 
     public function delete(string $id){
-        $users = [
-            [
-                "id" => 1,
-                "name" => "Beckam putra",
-                "email" => "beckam@persib.co.id",
-                "date" => "22-12-2001",
-                "role" => "user",
-                "gender" => "Male",
-                "phone" => "08389272625",
-                "password" => "jhhs656"
-            ],
-            [
-                "id" => 2,
-                "name" => "Febri haryadi",
-                "email" => "febri@persib.co.id",
-                "date" => "02-12-1998",
-                "role" => "user",
-                "gender" => "Male",
-                "phone" => "08389585",
-                "password" => "tghh56"
-            ]
-
-        ];
-
-        foreach($users as $key => $value){
-            if($value["id"] == $id){
-                array_splice($users, $key, 1);
-            }
+        $user = User::find($id);
+        if (!$user) { // !false == true
+            return "User tidak ditemukan";
         }
-        return $users;
+
+        $user->delete();
+
+        return redirect()->route('home');
 
     }
 }

@@ -1,7 +1,8 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use Illuminate\Support\Facades\Hash;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class UserController extends Controller
@@ -11,31 +12,11 @@ class UserController extends Controller
      */
     public function index()
     {
-        $users = [
-            [
-                "id" => 1,
-                "name" => "Beckam putra",
-                "email" => "beckam@persib.co.id",
-                "date" => "22-12-2001",
-                "role" => "user",
-                "gender" => "Male",
-                "phone" => "08389272625",
-                "password" => "jhhs656"
-            ],
-            [
-                "id" => 2,
-                "name" => "Febri haryadi",
-                "email" => "febri@persib.co.id",
-                "date" => "02-12-1998",
-                "role" => "user",
-                "gender" => "Male",
-                "phone" => "08389585",
-                "password" => "tghh56"
-            ]
+        $users = User::all();
+        $users = $users->toArray();
 
-        ];
 
-        return view("admin.user_management", [
+        return view("admin.dashboard", [
             "users" => $users
         ]);
     }
@@ -54,24 +35,22 @@ class UserController extends Controller
     public function store(Request $request)
     {
      
-        $name = request()->post('name');
-        $email = request()->post('email');
-        $date = request()->post('date');
-        $male = request()->post('male');
-        $female = request()->post('female');
-        $phone = request()->post('phone');
-        $addres = request()->post('addres');
+        $user = new User();
 
-        @dd([
-            $name,
-            $email,
-            $date,
-            $male,
-            $female,
-            $phone,
-            $addres
-        ]);
+        $user->name = request()->post('name');
+        $user->email = request()->post('email');
+        $user->birth_date = request()->post('birth_date');
+        $user->gender = request()->post('gender');
+        $user->addres = request()->post('addres');
+        $user->password = Hash::make(request()->post('password'));
+        $user->phone_number = request()->post('phone');
+        $user->photo = request()->post('photo');
+        $user->role_id = 2;
+        $user->addres = request()->post('addres');
 
+        $user->save();
+
+        return redirect()->route('landing');
     }
 
     /**
@@ -79,37 +58,9 @@ class UserController extends Controller
      */
     public function show(string $id)
     {
-        $users = [
-            [
-                "id" => 1,
-                "name" => "Beckam putra",
-                "email" => "beckam@persib.co.id",
-                "date" => "22-12-2001",
-                "gender" => "Male",
-                "phone" => "08389272625",
-                "password" => "jhhs656"
-            ],
-            [
-                "id" => 2,
-                "name" => "Febri haryadi",
-                "email" => "febri@persib.co.id",
-                "date" => "02-12-1998",
-                "gender" => "Male",
-                "phone" => "08389585",
-                "password" => "tghh56"
-            ]
+        $user = User::find($id);
 
-        ];
-
-        $result = [];
-
-        foreach($users as $user){
-            if($user["id"] == $id){
-                $result = $user;
-            }
-        }
-
-        return $result;
+        return $user;
 
     }
 
@@ -118,38 +69,10 @@ class UserController extends Controller
      */
     public function edit(string $id)
     {
-        $users = [
-            [
-                "id" => 1,
-                "name" => "Beckam putra",
-                "email" => "beckam@persib.co.id",
-                "date" => "22-12-2001",
-                "gender" => "Male",
-                "phone" => "08389272625",
-                "password" => "jhhs656"
-            ],
-            [
-                "id" => 2,
-                "name" => "Febri haryadi",
-                "email" => "febri@persib.co.id",
-                "date" => "02-12-1998",
-                "gender" => "Male",
-                "phone" => "08389585",
-                "password" => "tghh56"
-            ]
+        $user = User::find($id);
 
-        ];
-
-        $result = [];
-
-        foreach($users as $user){
-            if($user["id"] == $id){
-                $result = $user;
-            }
-        }
-
-        return view('admin.edituser', [
-            'user' => $result
+        return view('admin.dashboard', [
+            'user' => $user
         ]);
 
     }
@@ -159,37 +82,16 @@ class UserController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        $users = [
-            [
-                "id" => 1,
-                "name" => "Beckam putra",
-                "email" => "beckam@persib.co.id",
-                "date" => "22-12-2001",
-                "gender" => "Male",
-                "phone" => "08389272625",
-                "password" => "jhhs656"
-            ],
-            [
-                "id" => 2,
-                "name" => "Febri haryadi",
-                "email" => "febri@persib.co.id",
-                "date" => "02-12-1998",
-                "gender" => "Male",
-                "phone" => "08389585",
-                "password" => "tghh56"
-            ]
-        ];
-
-        foreach($users as $key => $user){
-            if($user["id"] == $id){
-                $users[$key]["name"] =  request()->post('name');
-                $users[$key]["email"] =  request()->post('email');
-                $users[$key]["phone"] =  request()->post('phone');
-                $users[$key]["password"] =  request()->post('password');
-            }
+        $user = User::find($id);
+        if (!$user) { // !false == true
+            return "User tidak ditemukan";
         }
 
-        return $users;
+        $payload = $request->only(['name', 'email', 'birth_date', 'gender', 'phone_number', 'addres', 'password']);
+
+        $user->update($payload);
+
+        return redirect()->route('user.index');
     }
 
     /**
@@ -197,33 +99,46 @@ class UserController extends Controller
      */
     public function destroy(string $id)
     {
-        $users = [
-            [
-                "id" => 1,
-                "name" => "Beckam putra",
-                "email" => "beckam@persib.co.id",
-                "date" => "22-12-2001",
-                "gender" => "Male",
-                "phone" => "08389272625",
-                "password" => "jhhs656"
-            ],
-            [
-                "id" => 2,
-                "name" => "Febri haryadi",
-                "email" => "febri@persib.co.id",
-                "date" => "02-12-1998",
-                "gender" => "Male",
-                "phone" => "08389585",
-                "password" => "tghh56"
-            ]
-        ];
-
-        foreach($users as $key => $value){
-            if($value["id"] == $id){
-                array_splice($users, $key, 1);
-            }
+        $user = User::find($id);
+        if (!$user) { // !false == true
+            return "User tidak ditemukan";
         }
-        return $users;
+
+        $user->delete();
+
+        return "Data user berhasil dihapus";
+    }
+
+    public function UserRegister(Request $request)
+    {
+     
+        $user = new User();
+
+        $user->name = request()->post('name');
+        $user->email = request()->post('email');
+        $user->birth_date = request()->post('birth_date');
+        $user->gender = request()->post('gender');
+        $user->addres = request()->post('addres');
+        $user->password = Hash::make(request()->post('password'));
+        $user->phone_number = request()->post('phone');
+        $user->photo = request()->post('photo');
+        $user->role_id = 2;
+        $user->addres = request()->post('addres');
+
+        $user->save();
+
+        return redirect()->route('landing');
+    }
+
+    public function admin(){
+       
+        $user = User::find(auth()->id());
+
+        return view('admin.dashboard', [
+            'user' => $user
+        ]);
 
     }
+
 }
+

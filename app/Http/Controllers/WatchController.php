@@ -2,7 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Watch;
+use App\Models\Game;
+use App\Models\Status;
+use App\Models\Location;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\Rules\File;
 
 class WatchController extends Controller
 {
@@ -11,49 +17,19 @@ class WatchController extends Controller
      */
     public function index()
     {
-        $watch = [
-            [
-                "id" => 1,
-                "name" => "Nobar UCL",
-                "date" => "2024-06-02",
-                "competition" => "Champions league",
-                "home" => "Real madrid",
-                "away" => "Borrusia Dortmund",
-                "seat" => 50,
-                "status" => "free",
-                "location" => "Gedung serbaguna, Sukabumi",
-                "maps" => "https://gmaps.com",
-                "image" => "assets/images/club.jpg"
-            ],
-            [
-                "id" => 2,
-                "name" => "Nobar Final Liga 1",
-                "date" => "2024-05-31",
-                "competition" => "Liga 1",
-                "home" => "Persib",
-                "away" => "Madura",
-                "seat" => 100,
-                "status" => "free",
-                "location" => "GOR Asko, Sukabumi",
-                "maps" => "https://gmaps.com",
-                "image" => "assets/images/club2.jpg"
-            ],
-            [
-                "id" => 3,
-                "name" => "Nobar Timnas Indonesia",
-                "date" => "2024-06-06",
-                "competition" => "World Cup Qualifier",
-                "home" => "Indonesia",
-                "away" => "Irak",
-                "seat" => 1000,
-                "status" => "free",
-                "location" => "Istora senayan, Jakarta",
-                "maps" => "https://gmaps.com",
-                "image" => "assets/images/club3.jpg"
-            ]
-        ];
-        return view("admin.watch_management", [
-            'watch' => $watch
+        $watch = DB::table('watches')
+        ->select('watches.id as watch_id', 'watches.name as watch_name','watches.*', 'statuses.*','games.*','locations.*')
+        ->join('statuses', 'watches.status_id', '=', 'statuses.id')
+        ->join('games', 'watches.match_id', '=', 'games.id')
+        ->join('locations', 'watches.location_id', '=', 'locations.id')
+        ->get();
+
+        
+
+        $watchs = collect(json_decode($watch, true));
+    
+        return view("admin.dashboard", [
+            'watch' => $watchs
         ]);
     }
 
@@ -70,21 +46,64 @@ class WatchController extends Controller
      */
     public function store(Request $request)
     {
-        $name = request()->post('name');
-        $competition = request()->post('competiton');
-        $home = request()->post('home');
-        $away = request()->post('away');
-        $location = request()->post('location');
-        $maps = request()->post('maps');
+        $game= new Game();
+        $watch = new Watch();
+        $status = new Status();
+        $location = new Location();
 
-        @dd([
-            $name,
-            $competition,
-            $home,
-            $away,
-            $location,
-            $maps
-        ]);
+
+        $gambar = request()->file("gambar"); // file gambar
+        $extenstion = $gambar->extension(); // png, jpg, webp
+        $filename = uniqid() . "." . $extenstion;
+        $gambar->move("upload/posts", $filename);
+
+        $uriGambar = "upload/posts/" . $filename;
+
+        $game->date = request()->post('date');
+        $game->kickoff = request()->post('match_date');
+        $game->competition = request()->post('competition');
+        $game->home_team = request()->post('home');
+        $game->away_team = request()->post('away');
+
+        $game->save();
+
+        $status->free_paid = request()->post('free_paid');
+        $status->price =  request()->post('price');
+        $status->person =  request()->post('person');
+
+        $status->save();
+
+        $gambarLok = request()->file("gambarLok"); // file gambar
+        $extenstion = $gambarLok->extension(); // png, jpg, webp
+        $filename = uniqid() . "." . $extenstion;
+        $gambarLok->move("upload/posts", $filename);
+
+        $uriPict = "upload/Location/" . $filename;
+
+       $location->name = request()->post('location_name');
+       $location->addres = request()->post('addres');
+       $location->photo = $uriPict;
+       $location->location_link = request()->post('location_link');
+       $location->save();
+
+        $games = Game::latest()->first();
+        $statuses = Status::latest()->first();
+        $locations = Location::latest()->first();
+
+        $watch->name = request()->post('name');
+        $watch->date = "2024-04-14";
+        $watch->seat = request()->post('seat');
+        $watch->image = $uriGambar;
+        $watch->time_open = request()->post('time_open');
+        $watch->like=2;
+        $watch->user_id = auth()->id();
+        $watch->status_id= $statuses['id'];
+        $watch->match_id= $games['id'];
+        $watch->location_id= $locations['id'];
+
+        $watch->save();
+
+        return redirect()->route('watch.index');
     }
 
     /**
@@ -92,56 +111,19 @@ class WatchController extends Controller
      */
     public function show(string $id)
     {
-        $watch = [
-            [
-                "id" => 1,
-                "name" => "Nobar UCL",
-                "date" => "2024-06-02",
-                "competition" => "Champions league",
-                "home" => "Real madrid",
-                "away" => "Borrusia Dortmund",
-                "seat" => 50,
-                "status" => "free",
-                "location" => "Gedung serbaguna, Sukabumi",
-                "maps" => "https://gmaps.com",
-                "image" => "assets/images/club.jpg"
-            ],
-            [
-                "id" => 2,
-                "name" => "Nobar Final Liga 1",
-                "date" => "2024-05-31",
-                "competition" => "Liga 1",
-                "home" => "Persib",
-                "away" => "Madura",
-                "seat" => 100,
-                "status" => "free",
-                "location" => "GOR Asko, Sukabumi",
-                "maps" => "https://gmaps.com",
-                "image" => "assets/images/club2.jpg"
-            ],
-            [
-                "id" => 3,
-                "name" => "Nobar Timnas Indonesia",
-                "date" => "2024-06-06",
-                "competition" => "World Cup Qualifier",
-                "home" => "Indonesia",
-                "away" => "Irak",
-                "seat" => 1000,
-                "status" => "free",
-                "location" => "Istora senayan, Jakarta",
-                "maps" => "https://gmaps.com",
-                "image" => "assets/images/club3.jpg"
-            ]
-        ];
+       
+        $watch = Watch::query()->where("id", "=", $id)->first();
+        $game = Game::query()->where("id", "=", $watch->match_id)->first();
+        $status = Status::query()->where("id", "=", $watch->status_id)->first();
+        $location = Location::query()->where("id", "=", $watch->location_id)->first();
 
-        $result = [];
+        return view("partial.page.user.detail", [
+            "watch" => $watch,
+            "game" => $game,
+            "status" => $status,
+            "location" => $location
+        ]);
 
-        foreach($watch as $match){
-            if($match["id"] == $id){
-                $result = $match;
-            }
-        }
-        return $result;
     }
 
     /**
@@ -149,58 +131,16 @@ class WatchController extends Controller
      */
     public function edit(string $id)
     {
-        $watch = [
-            [
-                "id" => 1,
-                "name" => "Nobar UCL",
-                "date" => "2024-06-02",
-                "competition" => "Champions league",
-                "home" => "Real madrid",
-                "away" => "Borrusia Dortmund",
-                "seat" => 50,
-                "status" => "free",
-                "location" => "Gedung serbaguna, Sukabumi",
-                "maps" => "https://gmaps.com",
-                "image" => "assets/images/club.jpg"
-            ],
-            [
-                "id" => 2,
-                "name" => "Nobar Final Liga 1",
-                "date" => "2024-05-31",
-                "competition" => "Liga 1",
-                "home" => "Persib",
-                "away" => "Madura",
-                "seat" => 100,
-                "status" => "free",
-                "location" => "GOR Asko, Sukabumi",
-                "maps" => "https://gmaps.com",
-                "image" => "assets/images/club2.jpg"
-            ],
-            [
-                "id" => 3,
-                "name" => "Nobar Timnas Indonesia",
-                "date" => "2024-06-06",
-                "competition" => "World Cup Qualifier",
-                "home" => "Indonesia",
-                "away" => "Irak",
-                "seat" => 1000,
-                "status" => "free",
-                "location" => "Istora senayan, Jakarta",
-                "maps" => "https://gmaps.com",
-                "image" => "assets/images/club3.jpg"
-            ]
-        ];
+        $watch = Watch::find($id);
+        $game = Game::query()->where("id", "=", $watch->match_id)->first();
+        $status = Status::query()->where("id", "=", $watch->status_id)->first();
+        $location = Location::query()->where("id", "=", $watch->location_id)->first();
 
-        $result = [];
-
-        foreach($watch as $match){
-            if($match["id"] == $id){
-                $result = $match;
-            }
-        }
-
-        return view('admin.edit_watch', [
-            'match' => $result
+        return view('admin.dashboard', [
+            'watch' => $watch,
+            'game' => $game,
+            'status' => $status,
+            'location' => $location
         ]);
 
     }
@@ -210,61 +150,17 @@ class WatchController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        $watch = [
-            [
-                "id" => 1,
-                "name" => "Nobar UCL",
-                "date" => "2024-06-02",
-                "competition" => "Champions league",
-                "home" => "Real madrid",
-                "away" => "Borrusia Dortmund",
-                "seat" => 50,
-                "status" => "free",
-                "location" => "Gedung serbaguna, Sukabumi",
-                "maps" => "https://gmaps.com",
-                "image" => "assets/images/club.jpg"
-            ],
-            [
-                "id" => 2,
-                "name" => "Nobar Final Liga 1",
-                "date" => "2024-05-31",
-                "competition" => "Liga 1",
-                "home" => "Persib",
-                "away" => "Madura",
-                "seat" => 100,
-                "status" => "free",
-                "location" => "GOR Asko, Sukabumi",
-                "maps" => "https://gmaps.com",
-                "image" => "assets/images/club2.jpg"
-            ],
-            [
-                "id" => 3,
-                "name" => "Nobar Timnas Indonesia",
-                "date" => "2024-06-06",
-                "competition" => "World Cup Qualifier",
-                "home" => "Indonesia",
-                "away" => "Irak",
-                "seat" => 1000,
-                "status" => "free",
-                "location" => "Istora senayan, Jakarta",
-                "maps" => "https://gmaps.com",
-                "image" => "assets/images/club3.jpg"
-            ]
-        ];
+        
+        $watch = Watch::find($id);
+        $game = Game::query()->where("id", "=", $watch->match_id)->first();
+        $status = Status::query()->where("id", "=", $watch->status_id)->first();
+        $location = Location::query()->where("id", "=", $watch->location_id)->first();
 
-        foreach($watch as $key => $match){
-            if($match["id"] == $id){
-                $watch[$key]["name"] =  request()->post('name');
-                $watch[$key]["competition"] =  request()->post('competition');
-                $watch[$key]["home"] =  request()->post('home');
-                $watch[$key]["away"] =  request()->post('away');
-                $watch[$key]["seat"] =  request()->post('seat');
-                $watch[$key]["status"] =  request()->post('status');
-                $watch[$key]["location"] =  request()->post('location');
-            }
-        }
+        $watchs = $request->only(["name","date","seat"]);
 
-        return $watch;
+        $watch->update($watchs);
+
+        return redirect()->route('watch.index');
 
     }
 
@@ -273,104 +169,145 @@ class WatchController extends Controller
      */
     public function destroy(string $id)
     {
-        $watch = [
-            [
-                "id" => 1,
-                "name" => "Nobar UCL",
-                "date" => "2024-06-02",
-                "competition" => "Champions league",
-                "home" => "Real madrid",
-                "away" => "Borrusia Dortmund",
-                "seat" => 50,
-                "status" => "free",
-                "location" => "Gedung serbaguna, Sukabumi",
-                "maps" => "https://gmaps.com",
-                "image" => "assets/images/club3.jpg"
-            ],
-            [
-                "id" => 2,
-                "name" => "Nobar Final Liga 1",
-                "date" => "2024-05-31",
-                "competition" => "Liga 1",
-                "home" => "Persib",
-                "away" => "Madura",
-                "seat" => 100,
-                "status" => "free",
-                "location" => "GOR Asko, Sukabumi",
-                "maps" => "https://gmaps.com",
-                "image" => "assets/images/club2.jpg"
-            ],
-            [
-                "id" => 3,
-                "name" => "Nobar Timnas Indonesia",
-                "date" => "2024-06-06",
-                "competition" => "World Cup Qualifier",
-                "home" => "Indonesia",
-                "away" => "Irak",
-                "seat" => 1000,
-                "status" => "free",
-                "location" => "Istora senayan, Jakarta",
-                "maps" => "https://gmaps.com",
-                "image" => "assets/images/club3.jpg"
-            ]
-        ];
+        $watch = Watch::find($id);
+        $game = Game::query()->where("id", "=", $watch->match_id)->first();
+        $status = Status::query()->where("id", "=", $watch->status_id)->first();
+        $location = Location::query()->where("id", "=", $watch->location_id)->first();
 
-        foreach($watch as $key => $match){
-            if($match["id"] == $id){
-                array_splice($watch, $key, 1);
-            }
-        }
+        $watch->delete();
+        $game->delete();
+        $status->delete();
+        $location->delete();
 
-        return "Postingan sudah di hapus !";
+        return redirect()->route('watch.index');
+
+    }
+
+    public function detail(string $id)
+    {
+       
+        $watch = Watch::query()->where("id", "=", $id)->first();
+        $game = Game::query()->where("id", "=", $watch->match_id)->first();
+        $status = Status::query()->where("id", "=", $watch->status_id)->first();
+        $location = Location::query()->where("id", "=", $watch->location_id)->first();
+
+        return view("partial.page.user.detail", [
+            "watch" => $watch,
+            "game" => $game,
+            "status" => $status,
+            "location" => $location
+        ]);
 
     }
 
     public function mypost()
     {
-        $watch = [
-            [
-                "id" => 1,
-                "name" => "Nobar UCL",
-                "date" => "2024-06-02",
-                "competition" => "Champions league",
-                "home" => "Real madrid",
-                "away" => "Borrusia Dortmund",
-                "seat" => 50,
-                "status" => "free",
-                "location" => "Gedung serbaguna, Sukabumi",
-                "maps" => "https://gmaps.com",
-                "image" => "assets/images/club.jpg"
-            ]
-        ];
 
-        return view('user.posts', [
-            'mypost' => $watch
+        $watch = DB::table('watches')
+        ->select('watches.id as watch_id', 'watches.name as watch_name','watches.*', 'statuses.*','games.*','locations.*')
+        ->join('statuses', 'watches.status_id', '=', 'statuses.id')
+        ->join('games', 'watches.match_id', '=', 'games.id')
+        ->join('locations', 'watches.location_id', '=', 'locations.id')->orderBy('watches.created_at', 'desc')
+        ->get();
+
+
+        $watchs = collect(json_decode($watch, true));
+
+
+        $watchr = $watchs->where('user_id', auth()->id());
+
+ 
+
+        return view('user.mypost', [
+            'mypost' => $watchr
         ]);
+    }
+
+    public function mypoststore(Request $request){
+        $game= new Game();
+        $watch = new Watch();
+        $status = new Status();
+        $location = new Location();
+
+
+        $gambar = request()->file("gambar"); // file gambar
+        $extenstion = $gambar->extension(); // png, jpg, webp
+        $filename = uniqid() . "." . $extenstion;
+        $gambar->move("upload/posts", $filename);
+
+        $uriGambar = "upload/posts/" . $filename;
+
+        $game->date = request()->post('date');
+        $game->kickoff = request()->post('match_date');
+        $game->competition = request()->post('competition');
+        $game->home_team = request()->post('home');
+        $game->away_team = request()->post('away');
+
+        $game->save();
+
+        $status->free_paid = request()->post('free_paid');
+        $status->price =  request()->post('price');
+        $status->person =  request()->post('person');
+
+        $status->save();
+
+        $gambarLok = request()->file("gambarLok"); // file gambar
+        $extenstion = $gambarLok->extension(); // png, jpg, webp
+        $filename = uniqid() . "." . $extenstion;
+        $gambarLok->move("upload/posts", $filename);
+
+        $uriPict = "upload/Location/" . $filename;
+
+       $location->name = request()->post('location_name');
+       $location->addres = request()->post('addres');
+       $location->photo = $uriPict;
+       $location->location_link = request()->post('location_link');
+       $location->save();
+
+        $games = Game::latest()->first();
+        $statuses = Status::latest()->first();
+        $locations = Location::latest()->first();
+
+        $watch->name = request()->post('name');
+        $watch->date = "2024-04-14";
+        $watch->seat = request()->post('seat');
+        $watch->image = $uriGambar;
+        $watch->time_open = request()->post('time_open');
+        $watch->like=2;
+        $watch->user_id = auth()->id();
+        $watch->status_id= $statuses['id'];
+        $watch->match_id= $games['id'];
+        $watch->location_id= $locations['id'];
+
+        $watch->save();
+    }
+
+    public function mypostupdate(Request $request, string $id)
+    {
+        
+        $watch = Watch::find($id);
+        $game = Game::query()->where("id", "=", $watch->match_id)->first();
+        $status = Status::query()->where("id", "=", $watch->status_id)->first();
+        $location = Location::query()->where("id", "=", $watch->location_id)->first();
+
+        $watchs = $request->only(["name","date","seat"]);
+
+        $watch->update($watchs);
+
     }
 
     public function mypostdelete(string $id){
 
-        $watch = [
-            [
-                "id" => 1,
-                "name" => "Nobar UCL",
-                "date" => "2024-06-02",
-                "competition" => "Champions league",
-                "home" => "Real madrid",
-                "away" => "Borrusia Dortmund",
-                "seat" => 50,
-                "status" => "free",
-                "location" => "Gedung serbaguna, Sukabumi",
-                "maps" => "https://gmaps.com",
-                "image" => "assets/images/club.jpg"
-            ]
-        ];
+        $watch = Watch::find($id);
 
-        foreach($watch as $key => $match){
-            if($match["id"] == $id){
-                array_splice($watch, $key, 1);
-            }
-        }
+        $game = Game::query()->where("id", "=", $watch->match_id)->first();
+        $status = Status::query()->where("id", "=", $watch->status_id)->first();
+        $location = Location::query()->where("id", "=", $watch->location_id)->first();
+
+        $watch->delete();
+        $game->delete();
+        $status->delete();
+        $location->delete();
 
         return "Postingan sudah di hapus !";
         
@@ -378,97 +315,69 @@ class WatchController extends Controller
 
     public function posts()
     {
-        $watch = [
-            [
-                "id" => 1,
-                "name" => "Nobar UCL",
-                "date" => "2024-06-02",
-                "competition" => "Champions league",
-                "home" => "Real madrid",
-                "away" => "Borrusia Dortmund",
-                "seat" => 50,
-                "status" => "free",
-                "location" => "Gedung serbaguna, Sukabumi",
-                "maps" => "https://gmaps.com",
-                "image" => "assets/images/club.jpg"
-            ],
-            [
-                "id" => 2,
-                "name" => "Nobar Final Liga 1",
-                "date" => "2024-05-31",
-                "competition" => "Liga 1",
-                "home" => "Persib",
-                "away" => "Madura",
-                "seat" => 100,
-                "status" => "free",
-                "location" => "GOR Asko, Sukabumi",
-                "maps" => "https://gmaps.com",
-                "image" => "assets/images/club2.jpg"
-            ],
-            [
-                "id" => 3,
-                "name" => "Nobar Timnas Indonesia",
-                "date" => "2024-06-06",
-                "competition" => "World Cup Qualifier",
-                "home" => "Indonesia",
-                "away" => "Irak",
-                "seat" => 1000,
-                "status" => "free",
-                "location" => "Istora senayan, Jakarta",
-                "maps" => "https://gmaps.com",
-                "image" => "assets/images/club3.jpg"
-            ]
-        ];
-        return view("user.home", [
-            'watch' => $watch
+        $watch = DB::table('watches')
+        ->select('watches.id as watch_id', 'watches.name as watch_name','watches.*', 'statuses.*','games.*','locations.*')
+        ->join('statuses', 'watches.status_id', '=', 'statuses.id')
+        ->join('games', 'watches.match_id', '=', 'games.id')
+        ->join('locations', 'watches.location_id', '=', 'locations.id')->orderBy('watches.created_at', 'desc')
+        ->get();
+
+
+        $watchs = collect(json_decode($watch, true));
+
+        return view("user.beranda", [
+            'watch' => $watchs
         ]);
     }
 
     public function landing()
     {
-        $watch = [
-            [
-                "id" => 1,
-                "name" => "Nobar UCL",
-                "date" => "2024-06-02",
-                "competition" => "Champions league",
-                "home" => "Real madrid",
-                "away" => "Borrusia Dortmund",
-                "seat" => 50,
-                "status" => "free",
-                "location" => "Gedung serbaguna, Sukabumi",
-                "maps" => "https://gmaps.com",
-                "image" => "assets/images/club.jpg"
-            ],
-            [
-                "id" => 2,
-                "name" => "Nobar Final Liga 1",
-                "date" => "2024-05-31",
-                "competition" => "Liga 1",
-                "home" => "Persib",
-                "away" => "Madura",
-                "seat" => 100,
-                "status" => "free",
-                "location" => "GOR Asko, Sukabumi",
-                "maps" => "https://gmaps.com",
-                "image" => "assets/images/club2.jpg"
-            ],
-            [
-                "id" => 3,
-                "name" => "Nobar Timnas Indonesia",
-                "date" => "2024-06-06",
-                "competition" => "World Cup Qualifier",
-                "home" => "Indonesia",
-                "away" => "Irak",
-                "seat" => 1000,
-                "status" => "free",
-                "location" => "Istora senayan, Jakarta",
-                "maps" => "https://gmaps.com",
-                "image" => "assets/images/club3.jpg"
-            ]
-        ];
-        return view("landingpage.landingpage", [
-            'watch' => $watch
+        $watch = DB::table('watches')
+        ->select('watches.id as watch_id', 'watches.name as watch_name','watches.*', 'statuses.*','games.*','locations.*')
+        ->join('statuses', 'watches.status_id', '=', 'statuses.id')
+        ->join('games', 'watches.match_id', '=', 'games.id')
+        ->join('locations', 'watches.location_id', '=', 'locations.id')->orderBy('watches.created_at', 'desc')
+        ->get();
+
+
+        $watchs = collect(json_decode($watch, true));
+
+        return view("landingpage.pagelanding", [
+            'watch' => $watchs
+        ]);
+    }
+   
+    public function filter()
+    {
+        $watch = DB::table('watches')
+        ->select('watches.id as watch_id', 'watches.name as watch_name','watches.*', 'statuses.*','games.*','locations.*')
+        ->join('statuses', 'watches.status_id', '=', 'statuses.id')
+        ->join('games', 'watches.match_id', '=', 'games.id')
+        ->join('locations', 'watches.location_id', '=', 'locations.id')
+        ->where('statuses.free_paid', 'free')
+        ->get();
+
+        $watchs = collect(json_decode($watch, true));
+
+        return view('user.beranda', [
+            'watch' => $watchs
+        ]);
+    }
+
+    public function pay()
+    {
+        $watch = DB::table('watches')
+        ->select('watches.id as watch_id', 'watches.name as watch_name','watches.*', 'statuses.*','games.*','locations.*')
+        ->join('statuses', 'watches.status_id', '=', 'statuses.id')
+        ->join('games', 'watches.match_id', '=', 'games.id')
+        ->join('locations', 'watches.location_id', '=', 'locations.id')
+        ->where('statuses.free_paid', 'pay')
+        ->get();
+
+        $watchs = collect(json_decode($watch, true));
+
+        return view('user.beranda', [
+            'watch' => $watchs
         ]);
     }
 
