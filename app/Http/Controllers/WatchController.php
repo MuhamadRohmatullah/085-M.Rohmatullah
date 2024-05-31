@@ -136,7 +136,7 @@ class WatchController extends Controller
         $status = Status::query()->where("id", "=", $watch->status_id)->first();
         $location = Location::query()->where("id", "=", $watch->location_id)->first();
 
-        return view('admin.dashboard', [
+        return view('admin.edit_watch', [
             'watch' => $watch,
             'game' => $game,
             'status' => $status,
