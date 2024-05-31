@@ -11,15 +11,16 @@
 <p><ul>
     <li>Dashboard Admin, unutk mengelola semua aktivitas yang ada dalam aplikasi</li>
     <li>Form Register / Halaman Register, Pelanggan bisa melakukan pendaftaran unutk bisa mendapatkan akses membuat acara </li>
-    <li>Pelanggan yang sudah Register dan kemudian login kedalam aplikasi, dapat melakukan posting acara atau membuat acara nobar dengan mengisi semua detail acaranya di form postingan, mereka juga dapat menghapus, mengubah dan menaggapi acara nobar yang dibagikan pelanggan lain</li>
+    <li>Pelanggan yang sudah Register dan kemudian login kedalam aplikasi, dapat melakukan posting acara atau membuat acara nobar dengan mengisi semua detail acaranya di form postingan, mereka juga dapat menghapus, mengubah acara nobar yang dibagikannya</li>
     <li>Pelanggan yang login dapat mengubah foto profil mereka</li>
-    <li>Publik atau guest bisa melihat postingan acara nobar yang dilakukan namun tidak bisa membuat postingan nobar dan tidak bisa menanggapi</li>
-    <li>More feature is Coming soon ...</li>
+    <li>Publik atau guest bisa melihat postingan acara nobar yang dilakukan di landing page namun tidak bisa membuat postingan nobar</li>
 </ul></p>
 
 Admin login :
 - email : admin@ibra.com
 - password : AdminIbra
+
+untuk login ke beranda user, silahkan register saja lewat form login ada link ke register.
 <br/>
 berdasarkan seeder yang sudah ditambahkan unutk mengakses dashboard admin
 
