@@ -18,7 +18,7 @@
 </ul></p>
 
 Admin login :
-- email : admin.ibra.com
+- email : admin@ibra.com
 - password : AdminIbra
 berdasarkan seeder yang sudah ditambahkan unutk mengakses dashboard admin
 
