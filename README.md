@@ -17,3 +17,8 @@
     <li>More feature is Coming soon ...</li>
 </ul></p>
 
+Admin login :
+- email : admin.ibra.com
+- password : AdminIbra
+berdasarkan seeder yang sudah ditambahkan unutk mengakses dashboard admin
+
