@@ -20,7 +20,7 @@ Admin login :
 - email : admin@ibra.com
 - password : AdminIbra
 
-untuk login ke beranda user, silahkan register saja lewat form login ada link ke register.
 <br/>
 berdasarkan seeder yang sudah ditambahkan unutk mengakses dashboard admin
 
+untuk login ke beranda user, silahkan register saja lewat form login ada link ke register.
