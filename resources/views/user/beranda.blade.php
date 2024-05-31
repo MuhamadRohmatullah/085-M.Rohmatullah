@@ -15,6 +15,10 @@
             @include('partial.page.user.main')
         @elseif(request()->is('detail'))
             @include('partial.page.user.detail')
+        @elseif(request()->is('free'))
+            @include('partial.page.user.main')
+        @elseif(request()->is('pay'))
+            @include('partial.page.user.main')
         @endif
 
     </div>
