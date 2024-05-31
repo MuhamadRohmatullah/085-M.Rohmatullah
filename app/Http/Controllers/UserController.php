@@ -71,7 +71,7 @@ class UserController extends Controller
     {
         $user = User::find($id);
 
-        return view('admin.dashboard', [
+        return view('admin.edituser', [
             'user' => $user
         ]);
 

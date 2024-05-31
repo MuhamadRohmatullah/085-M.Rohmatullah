@@ -10,6 +10,6 @@
               <li><a class="dropdown-item" href="/pay">Pay</a></li>
             </ul>
           </div>
-          <a href="#exampleModal" class="btn btn-success" data-toggle="modal"><i class="material-icons">&#xE147;</i> <span>Add New Post</span></a>
+          <a href="#exampleModal" class="btn btn-success" data-toggle="modal">Add New Post</a>
     </div>
 </div>

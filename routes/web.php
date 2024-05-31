@@ -60,3 +60,10 @@ Route::controller(AuthController::class)->group(function () {
     Route::get('/logout', 'logout')->name('logout');
 });
 
+Route::get('/admin_user', function(){
+    return view('admin.edituser');
+});
+
+Route::get('/admin_watch', function(){
+    return view('admin.edit_watch');
+});

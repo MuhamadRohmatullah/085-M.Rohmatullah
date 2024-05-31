@@ -18,13 +18,11 @@
                                         <input class="form-control" type="file" name="gambar" required>
                                     </div>
                                     <div class="col-12 padding-0">
-                                        <input class="btn btn-light" type="submit" value="Ganti">
+                                        <input class="btn btn-warning mb-5" type="submit" value="Ganti">
                                     </div>
                                 </div>
                             </form>
-                            <div class="about">
-                                <h5>About</h5>
-                            </div>
+                            
                             <div class="text-center">
                                 <button class="btn btn-dark"><a href="/logout">Logout</a></button>
                             </div>
@@ -40,7 +38,7 @@
                     <div class="card-body">
                         <div class="row gutters">
                             <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
-                                <h6 class="mb-2 text-primary">Personal Details</h6>
+                                <h6 class="mb-2">Personal Details</h6>
                             </div>
                             <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
                                 <div class="form-group">
@@ -63,13 +61,26 @@
                             <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
                                 <div class="form-group">
                                     <label for="website">Gender</label>
-                                    <input type="text" name="gender" class="form-control" id="website" value="{{ $user['gender'] }}">
+                                    <div class="row">
+                                        <div class="col">
+                                            <div class="form-check form-check-inline">
+                                                <input name="gender" class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1">
+                                                <label class="form-check-label" for="inlineRadio1" value="1">Male</label>
+                                              </div>
+                                        </div>
+                                        <div class="col">
+                                            <div class="form-check form-check-inline">
+                                                <input name="gender" class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2" value="option2">
+                                                <label class="form-check-label" for="inlineRadio2" value="2">Female</label>
+                                              </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                         <div class="row gutters">
                             <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
-                                <h6 class="mt-3 mb-2 text-primary">Address</h6>
+                                <h6 class="mt-3 mb-2">Address</h6>
                             </div>
                             <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
                                 <div class="form-group">
@@ -82,8 +93,7 @@
                         <div class="row gutters">
                             <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
                                 <div class="text-right">
-                                    <button type="button" id="submit" name="submit" class="btn btn-secondary">Cancel</button>
-                                    <button type="submit" id="submit" name="submit" class="btn btn-primary">Update</button>
+                                    <button type="submit" id="submit" name="submit" class="btn btn-outline-warning">Update</button>
                                 </div>
                             </div>
                         </div>

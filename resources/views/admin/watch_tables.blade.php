@@ -283,7 +283,7 @@ $(document).ready(function(){
 						<td>
                             <div class="row">
                                 <div class="col">
-							        <a href="#editEmployeeModal" class="edit" data-toggle="modal"><i class="material-icons" data-toggle="tooltip" title="Edit">&#xE254;</i></a>
+							        <a href="{{ route('watch.edit', ['watch' => $match['watch_id']]) }}"><i class="material-icons" data-toggle="tooltip" title="Edit">&#xE254;</i></a>
                                 </div>
                                 <div class="col">
                                     <form action="{{ route('watch.destroy', ['watch' => $match['watch_id']]) }}" method="POST">

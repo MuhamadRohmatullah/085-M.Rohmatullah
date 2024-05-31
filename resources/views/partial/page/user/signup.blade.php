@@ -34,6 +34,9 @@
                   Login
                 </button>
               </div>
+
+              <div class="form-group nm_lk"><p>dont have account ? <a href="/registration" style="text-decoration : none; font-weight : bold">Register here</a></p></div>
+
           </div>
         </form>
         </div>
