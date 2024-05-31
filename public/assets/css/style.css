@@ -1,5 +1,5 @@
 *{
-    font-family: "Bebas Neue", sans-serif;
+    font-family: "Port Lligat Sans", sans-serif;
 }
 
 #mypost:hover, #home:hover{
@@ -8,5 +8,49 @@
 
 #mypost:focus, #home:focus{
     color: white;
+}   
+
+.padding-0{
+    padding-right:0;
+    padding-left:0;
 }
 
+#home, #mypost{
+    color: rgb(8, 252, 138)
+}
+
+.bg-sg{
+    background-color: rgb(8, 252, 138);
+}
+
+.nav-link:hover{
+    color: yellow;
+}
+
+.padding-end{
+    margin-left: 100px;
+}
+
+.filter{
+    border: 0;
+    box-shadow: 0;
+    background-color: white;
+}
+
+.iconheight {
+    height: 65px;
+    width: 65px;
+}
+
+.modal {
+    --bs-modal-width: 800px;
+}
+
+.getbtn {
+    background: #F2504D;
+    box-shadow: -2px 7px 20px 0px #e09897;
+}
+
+.getbtn:hover {
+    background: #F2504D;
+}
