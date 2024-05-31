@@ -191,7 +191,7 @@ class WatchController extends Controller
         $status = Status::query()->where("id", "=", $watch->status_id)->first();
         $location = Location::query()->where("id", "=", $watch->location_id)->first();
 
-        return view("partial.page.user.detail", [
+        return view("user.detail", [
             "watch" => $watch,
             "game" => $game,
             "status" => $status,

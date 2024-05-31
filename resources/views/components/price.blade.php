@@ -2,4 +2,4 @@
     'price'    
 ])
 
-    <button type="button" class="btn btn-success btn-sm">{{$price}}</button>
+    <button type="button" class="btn btn-dark btn-sm" id="price">{{$price}}</button>
